@@ -1,8 +1,11 @@
 import Product from "../models/productModel.js";
+import ApiFeatures from "../util/ApiFeatures.js"
 
 // create product 
 export const createProducts = async (req, res) => {
     try {
+        console.log("inside create product");
+        
         const product = await Product.create(req.body)
         if (!product) {
             return res.status(404).json({
@@ -27,7 +30,8 @@ export const createProducts = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find()
+        const apiFunctionality = new ApiFeatures(Product.find(), req.query).search().filter().pagination()
+        const products = await apiFunctionality.query
         if (!products) {
             return res.status(404).json({
                 success: false,

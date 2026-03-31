@@ -4,9 +4,11 @@ import dotenv from "dotenv";
 import Connection from "./db/conn.js";
 import productsRouter from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config()
 app.use(express.json())
+app.use(cookieParser())
 
 Connection()
 

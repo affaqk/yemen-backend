@@ -1,4 +1,5 @@
 import User from "../models/userModel.js"
+import { sendToken } from "../util/jwtToken.js";
 
 export const resgisterUserController = async (req, res) => {
     try {
@@ -20,11 +21,7 @@ export const resgisterUserController = async (req, res) => {
             })
         }
 
-        return res.status(200).json({
-            success: true,
-            message: "user registered successfully",
-            user
-        })
+        sendToken(user, 200, res)
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -52,17 +49,16 @@ export const loginUserController = async (req, res) => {
             })
         }
 
-        if (user.password !== password) {
+        let passwordMatched = await user.comparePassword(password)
+
+        if(!passwordMatched){
             return res.status(400).json({
-                success: false,
-                message: "Invalid credentials"
+                success : false,
+                message : "Invalid credentials"
             })
         }
 
-        return res.status(200).json({
-            success: true,
-            message: "user loggedin successfully"
-        })
+        sendToken(user, 200, res)
 
     } catch (error) {
         return res.status(500).json({
@@ -137,6 +133,25 @@ export const deleteUserProfileController = async (req,res) => {
         return res.status(200).json({
             success : true,
             message : "user deleted successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error
+        })
+    }
+}
+
+export const logoutUser = async (req,res) => {
+    try {
+        res.cookie("token", null, {
+            expires : new Date(Date.now()),
+            httpOnly : true
+        })
+
+        return res.status(200).json({
+            success : true,
+            message : "User loggedout successfully"
         })
     } catch (error) {
         return res.status(500).json({
