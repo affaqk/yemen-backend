@@ -1,5 +1,6 @@
 import User from "../models/userModel.js"
 import { sendToken } from "../util/jwtToken.js";
+import { sendEmail } from "../util/sendMail.js";
 
 export const resgisterUserController = async (req, res) => {
     try {
@@ -153,6 +154,47 @@ export const logoutUser = async (req,res) => {
             success : true,
             message : "User loggedout successfully"
         })
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error
+        })
+    }
+}
+
+export const resetPasswordRequestController = async (req,res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({email});
+
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+
+        let resetToken = user.resetPassword();
+        console.log(resetToken);
+        await user.save({validateBeforeSave : false})
+        
+        const resetPasswordUrl = `http://localhost:5173/reset-password/${resetToken}`
+        const message = `if you want to reset your password click on above link ${resetPasswordUrl}`;
+
+        console.log(resetPasswordUrl);
+        console.log(message);
+        
+        await sendEmail({
+            email : user.email,
+            subject : "Reset Password Request",
+            message
+        })
+
+        res.status(200).json({
+            success : true,
+            message : `Email sent successfully to ${user.email}`
+        })
+        
     } catch (error) {
         return res.status(500).json({
             success : false,
