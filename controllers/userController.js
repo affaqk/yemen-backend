@@ -1,6 +1,7 @@
 import User from "../models/userModel.js"
 import { sendToken } from "../util/jwtToken.js";
 import { sendEmail } from "../util/sendMail.js";
+import crypto from "crypto"
 
 export const resgisterUserController = async (req, res) => {
     try {
@@ -196,6 +197,80 @@ export const resetPasswordRequestController = async (req,res) => {
         })
         
     } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error
+        })
+    }
+}
+
+export const resetPasswordController = async (req, res) => {
+    try {
+        console.log(req.params.token);
+        const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire : { $gt : Date.now()}
+        });
+
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                message : "Invalid token or its been expired"
+            })
+        }
+
+        const { password, confirmPassword } = req.body;
+        if( password !== confirmPassword){
+            return res.status(400).json({
+                success : false,
+                message : "Password doesnt match to each other"
+            })
+        }
+
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+
+        await user.save();
+        sendToken(user, 200, res)
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error
+        })
+    }
+}
+
+export const updatePasswordController = async (req,res) => {
+    try {
+        console.log("in try block");
+        
+        const { oldPassword, newPassword, confirmNewPassword } = req.body;
+        const user = await User.findById(req.params.id).select("+password");
+        const isPasswordMatched = await user.comparePassword(oldPassword);
+
+        if(!isPasswordMatched){
+            return res.status(400).json({
+                success : false,
+                message : "Old password is incorrect"
+            })
+        }
+
+        if( newPassword !== confirmNewPassword ){
+            return res.status(400).json({
+                success : false,
+                message : "Password doesnt match to each other"
+            })
+        }
+
+        user.password = newPassword;
+        await user.save();
+        sendToken(user, 200, res)
+    } catch (error) {
+        console.log(error);
+        
         return res.status(500).json({
             success : false,
             error

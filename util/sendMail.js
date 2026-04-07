@@ -2,11 +2,7 @@ import nodemailer from "nodemailer";
 
 // SMTP = > simple mail transfer protocol
 export const sendEmail = async (options) => {
-    console.log("line 0");
-    
     try {
-        console.log("line 1");
-        
         const transporter = nodemailer.createTransport({
             service : process.env.SMTP_SERVICE,
             auth : {
@@ -14,8 +10,6 @@ export const sendEmail = async (options) => {
                 pass : process.env.SMTP_PASSWORD
             }
         })
-
-        console.log("i m in mail transpoter");
         
 
         const emailoptions = {
