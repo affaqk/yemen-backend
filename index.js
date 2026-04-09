@@ -5,6 +5,7 @@ import Connection from "./db/conn.js";
 import productsRouter from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import orderRouter from "./routes/orderRoutes.js";
 
 dotenv.config()
 app.use(express.json())
@@ -13,7 +14,8 @@ app.use(cookieParser())
 Connection()
 
 app.use("/api/v1/products", productsRouter);
-app.use("/api/v1/users", userRouter)
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/orders", orderRouter)
 
 const port = process.env.PORT
 app.listen(port, ()=>{
