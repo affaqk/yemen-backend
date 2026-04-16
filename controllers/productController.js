@@ -4,7 +4,6 @@ import ApiFeatures from "../util/ApiFeatures.js"
 // create product 
 export const createProducts = async (req, res) => {
     try {
-        console.log("inside create product");
         
         const product = await Product.create(req.body)
         if (!product) {
