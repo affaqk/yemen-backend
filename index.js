@@ -6,8 +6,13 @@ import productsRouter from "./routes/productRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import orderRouter from "./routes/orderRoutes.js";
+import cors from "cors"
 
 dotenv.config()
+app.use(cors({
+    origin: "http://localhost:5173", // your frontend URL
+    credentials: true
+}));
 app.use(express.json())
 app.use(cookieParser())
 
@@ -18,7 +23,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/orders", orderRouter)
 
 const port = process.env.PORT
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`listening on port ${port}`);
 })
 

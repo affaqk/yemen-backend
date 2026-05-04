@@ -5,9 +5,9 @@ const userRouter = express.Router();
 
 userRouter.post("/register-user", resgisterUserController);
 userRouter.post("/login-user", loginUserController);
-userRouter.get("/user-profile/:id", isAuthenticatedUser, userProfileController)
-userRouter.put("/update-profile/:id", isAuthenticatedUser, updateUserProfileController);
-userRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteUserProfileController);
+userRouter.get("/user-profile", isAuthenticatedUser, userProfileController)
+userRouter.put("/update-profile", isAuthenticatedUser, updateUserProfileController);
+userRouter.delete("/delete-profile", isAuthenticatedUser, deleteUserProfileController);
 userRouter.get("/logout", isAuthenticatedUser, logoutUser);
 userRouter.post("/reset-password-request", resetPasswordRequestController);
 userRouter.post("/reset-password/:token", resetPasswordController);

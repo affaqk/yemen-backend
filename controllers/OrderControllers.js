@@ -198,3 +198,33 @@ async function updatestock(id, quantity) {
 
     await product.save();
 }
+
+export const deleteOrder = async (req,res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if(!order){
+            return res.status(400).json({
+                success : false,
+                message : "Order not found"
+            })
+        }
+
+        if(order.orderStatus !== "Delivered"){
+            return res.status(400).json({
+                success : false,
+                message : "you cannot delete this order its under processing"
+            })
+        }
+
+        await Order.deleteOne({_id : req.params.id});
+        return res.status(200).json({
+            success : true,
+            message : "Order deleted successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error: " + err.message
+        })
+    }
+}

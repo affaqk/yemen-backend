@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdmin, isAuthenticatedUser } from "../util/userAuth.js";
-import { createOrderController, getAllOrders, getSingleOrder, myOrderDetails, updateOrderStatus} from "../controllers/OrderControllers.js";
+import { createOrderController, deleteOrder, getAllOrders, getSingleOrder, myOrderDetails, updateOrderStatus} from "../controllers/OrderControllers.js";
 const orderRouter = express.Router()
 
 orderRouter.post("/create-order", isAuthenticatedUser, createOrderController);
@@ -8,5 +8,6 @@ orderRouter.get("/order-details/:id", isAuthenticatedUser, isAdmin("admin"), get
 orderRouter.get("/my-order", isAuthenticatedUser, myOrderDetails);
 orderRouter.get("/all-orders", isAuthenticatedUser, isAdmin("admin"), getAllOrders)
 orderRouter.put("/update-order-status/:id", isAuthenticatedUser, isAdmin("admin"), updateOrderStatus)
+orderRouter.delete("/delete-order/:id", isAuthenticatedUser, isAdmin("admin"), deleteOrder)
 
 export default orderRouter;
