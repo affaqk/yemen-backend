@@ -11,7 +11,7 @@ userRouter.delete("/delete-profile", isAuthenticatedUser, deleteUserProfileContr
 userRouter.get("/logout", isAuthenticatedUser, logoutUser);
 userRouter.post("/reset-password-request", resetPasswordRequestController);
 userRouter.post("/reset-password/:token", resetPasswordController);
-userRouter.post("/update-password/:id", updatePasswordController)
+userRouter.put("/update-password", isAuthenticatedUser, updatePasswordController)
 
 export default userRouter
 
