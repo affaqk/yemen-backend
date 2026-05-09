@@ -1,4 +1,6 @@
 import User from "../models/userModel.js"
+import Product from "../models/productModel.js";
+import Order from "../models/orderModel.js";
 import { sendToken } from "../util/jwtToken.js";
 import { sendEmail } from "../util/sendMail.js";
 import crypto from "crypto"
@@ -308,6 +310,32 @@ export const updatePasswordController = async (req,res) => {
         user.password = newPassword;
         await user.save();
         sendToken(user, 200, res)
+    } catch (error) {
+        console.log(error);
+        
+        return res.status(500).json({
+            success : false,
+            error
+        })
+    }
+}
+
+export const combineData = async (req,res) => {
+    try {
+        const users = await User.find();
+        const products = await Product.find();
+        const orders = await Order.find();
+        let total = 0
+        orders.forEach(element => {
+            total = total + element.totalPrice
+        });
+        return res.status(200).json({
+            success : true,
+            user : users.length,
+            product : products.length,
+            order : orders.length,
+            total
+        })
     } catch (error) {
         console.log(error);
         

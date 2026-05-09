@@ -112,7 +112,7 @@ export const getAllOrders = async (req, res) => {
         }
         let total = 0
         orders.forEach(element => {
-            total = total + orders.totalPrice
+            total = total + element.totalPrice
 
         });
         return res.status(200).json({
