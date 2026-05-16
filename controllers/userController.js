@@ -97,6 +97,28 @@ export const userProfileController = async (req, res) => {
     }
 }
 
+export const getUserRole = async (req,res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                message : "user not found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error
+        })
+    }
+}
+
 export const updateUserProfileController = async (req, res) => {
     try {
         // let user = await User.findById(req.params.id);
