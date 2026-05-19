@@ -1,5 +1,5 @@
 import express from "express";
-import { combineData, deleteUserProfileController, getAllUsers, getUserRole, loginUserController, logoutUser, resetPasswordController, resetPasswordRequestController, resgisterUserController, updatePasswordController, updateUserProfileController, userProfileController } from "../controllers/userController.js";
+import { changeUserRole, combineData, deleteUserProfileController, getAllUsers, getUserRole, loginUserController, logoutUser, resetPasswordController, resetPasswordRequestController, resgisterUserController, updatePasswordController, updateUserProfileController, userProfileController } from "../controllers/userController.js";
 import { isAuthenticatedUser, isAdmin } from "../util/userAuth.js";
 const userRouter = express.Router();
 
@@ -15,6 +15,7 @@ userRouter.put("/reset-password/:token", resetPasswordController);
 userRouter.put("/update-password", isAuthenticatedUser, updatePasswordController)
 userRouter.get("/combine-data", isAuthenticatedUser, combineData)
 userRouter.get("/get-user-role", isAuthenticatedUser, getUserRole)
+userRouter.put("/change-user-role/:id", isAuthenticatedUser, isAdmin("admin"), changeUserRole)
 
 export default userRouter
 

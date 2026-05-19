@@ -368,4 +368,36 @@ export const combineData = async (req,res) => {
     }
 }
 
-// post and put
+export const changeUserRole = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const { role } = req.body;
+        if (!role) {
+            return res.status(400).json({
+                success: false,
+                message: "Role is required"
+            });
+        }
+
+        user.role = role;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: `User role updated to ${role}`,
+            user
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error
+        });
+    }
+}

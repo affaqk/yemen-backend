@@ -3,7 +3,7 @@ import Product from "../models/productModel.js"
 
 export const createOrderController = async (req, res) => {
     try {
-        const { orderItems, shippingInfo, paymentInfo, taxPrice, shippingPrice, totalPrice, orderstatus } = req.body;
+        const { orderItems, shippingInfo, paymentInfo, taxPrice, shippingCost, totalPrice, orderStatus } = req.body;
 
 
         for (const item of orderItems) {
@@ -27,9 +27,9 @@ export const createOrderController = async (req, res) => {
             shippingInfo,
             paymentInfo,
             taxPrice,
-            shippingPrice,
+            shippingCost,
             totalPrice,
-            orderstatus,
+            orderStatus,
             user: req.user._id,
             paidAt: Date.now()
         });
@@ -170,6 +170,8 @@ export const updateOrderStatus = async (req, res) => {
 
 
     } catch (err) {
+        console.log(err);
+        
         return res.status(500).json({
             success: false,
             message: "Internal server error: " + err.message
